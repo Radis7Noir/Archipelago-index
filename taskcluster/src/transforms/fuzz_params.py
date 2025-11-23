@@ -45,12 +45,15 @@ def fuzz_params(config, tasks):
         env["FUZZ_YAMLS_PER_RUN"] = str(args.yamls_per_run)
         env["FUZZ_EXTRA_ARGS"] = extra_args
 
+        task.setdefault("attributes", {})["extra_args_key"] = "default"
+
         yield copy.deepcopy(task)
 
         if dupe_with_empty:
             apworld_name = task["attributes"]["apworld_name"]
             version = task["attributes"]["version"]
             task["label"] = f"fuzz-no-restrictive-starts-{apworld_name}-{version}"
+            task["attributes"]["extra_args_key"] = "no-restrictive-starts"
 
             env["FUZZ_EXTRA_ARGS"] = extra_args + "--hook hooks.with_empty:Hook"
 
